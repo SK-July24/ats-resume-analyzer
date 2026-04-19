@@ -22,7 +22,7 @@ const UploadForm = ({ setResult, setResumeFile }) => {
 
         try {
             const res = await axios.post(
-                "https://your-app.onrender.com/analyze",
+                "https://ats-resume-analyzer-3im5.onrender.com/analyze",
                 formData,
                 {
                     headers: {
