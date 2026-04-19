@@ -2,75 +2,67 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const UploadForm = ({ setResult, setResumeFile }) => {
-    const [file, setFile] = useState(null);
-    const [jd, setJd] = useState("");
+  const [file, setFile] = useState(null);
+  const [jd, setJd] = useState("");
 
-    const handleFileChange = (e) => {
-        const uploaded = e.target.files[0];
-        setFile(uploaded);
+  const handleFileChange = (e) => {
+    const uploaded = e.target.files[0];
+    setFile(uploaded);
+  };
 
-        const url = URL.createObjectURL(uploaded);
-        setResumeFile(url);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("job_description", jd);
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("job_description", jd);
-
-        try {
-            const res = await axios.post(
-                "https://ats-resume-analyzer-3im5.onrender.com/analyze",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            setResult(res.data);
-        } catch (err) {
-            console.log(err);
+    try {
+      const res = await axios.post(
+        "https://ats-resume-analyzer-3im5.onrender.com/analyze",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-    };
+      );
 
-    return (
-        <div className="card shadow-lg border-0 p-4 mb-4"
-            style={{ borderRadius: "15px" }}>
+      setResult(res.data);
+      setResumeFile(res.data.resume_url); // ✅ IMPORTANT
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-            <h4 className="mb-3">Upload Resume</h4>
+  return (
+    <div className="card shadow-lg border-0 p-4 mb-4"
+         style={{ borderRadius: "15px" }}>
 
-            <input
-                type="file"
-                className="form-control mb-3"
-                onChange={handleFileChange}
-            />
+      <h4 className="mb-3">Upload Resume</h4>
 
-            <textarea
-                className="form-control mb-3"
-                rows="5"
-                placeholder="Paste Job Description"
-                value={jd}
-                onChange={(e) => setJd(e.target.value)}
-            />
+      <input
+        type="file"
+        className="form-control mb-3"
+        onChange={handleFileChange}
+      />
 
-            <button
-                className="btn btn-primary w-100"
-                style={{
-                    borderRadius: "10px",
-                    fontWeight: "600",
-                    padding: "10px"
-                }}
-                onClick={handleSubmit}
-            >
-                Analyze Resume
-            </button>
+      <textarea
+        className="form-control mb-3"
+        rows="5"
+        placeholder="Paste Job Description"
+        value={jd}
+        onChange={(e) => setJd(e.target.value)}
+      />
 
-        </div>
-    );
+      <button
+        className="btn btn-primary w-100"
+        onClick={handleSubmit}
+      >
+        Analyze Resume
+      </button>
+    </div>
+  );
 };
 
 export default UploadForm;
