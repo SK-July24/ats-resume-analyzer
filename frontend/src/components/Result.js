@@ -13,6 +13,9 @@ const Result = ({ result, resumeFile }) => {
     return "danger";
   };
 
+  // ✅ Added mobile check
+  const isMobile = window.innerWidth < 768;
+
   return (
     <div>
 
@@ -56,13 +59,27 @@ const Result = ({ result, resumeFile }) => {
             <h5 className="text-center">Resume Preview</h5>
           </div>
 
-          <iframe
-            src={resumeFile}
-            width="100%"
-            height="600px"
-            style={{ border: "none" }}
-            title="resume"
-          />
+          {/* ✅ Changed logic here */}
+          {isMobile ? (
+            <div className="text-center p-3">
+              <a
+                href={resumeFile}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
+                Open Resume
+              </a>
+            </div>
+          ) : (
+            <iframe
+              src={resumeFile}
+              width="100%"
+              height="600px"
+              style={{ border: "none" }}
+              title="resume"
+            />
+          )}
         </div>
       )}
 
