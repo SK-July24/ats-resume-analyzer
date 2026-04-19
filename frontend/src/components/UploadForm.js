@@ -9,8 +9,12 @@ const UploadForm = ({ setResult, setResumeFile }) => {
         const uploaded = e.target.files[0];
         setFile(uploaded);
 
-        const url = URL.createObjectURL(uploaded);
-        setResumeFile(url);
+        // ✅ FIX HERE
+        const reader = new FileReader();
+        reader.onload = () => {
+            setResumeFile(reader.result);
+        };
+        reader.readAsDataURL(uploaded);
     };
 
     const handleSubmit = async (e) => {
